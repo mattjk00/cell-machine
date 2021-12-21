@@ -1,0 +1,13 @@
+states 4
+
+1 *.0 _ ^ 2	# In state 1, if all neighbor 0, move random 1, go s2
+1 ^.3 2 @ 1	# If neighbor is food, absorb and leave behind child.
+1 *.1 _ _ 0	# If trapped by competition, die
+1 ^2.1 _ ^ 1	# Try to separate self from competition. If neighboring 2, run.
+
+2 *_0 _ _ 0	# If no energy source in state 2, die
+
+3 *.0 _ _ 0	# Energy dies out if alone
+3 ^1.3 _ _ 3	# Stay Alive if one energy neighbor
+3 ^2.3 3 ^ 3	# Reproduce if two neighbors
+3 *.3 _ _ 0	# Die if all neighbors are energy
