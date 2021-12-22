@@ -7,7 +7,7 @@ use std::io;
 use std::fmt;
 
 #[derive(Debug)]
-enum TokenType {
+pub enum TokenType {
     Number,         // Decimal or Hex Number
     Dot,            // .
     Null,           // _
@@ -26,7 +26,7 @@ impl fmt::Display for TokenType {
     }
 }
 
-struct Token {
+pub struct Token {
     ttype:TokenType,
     lexeme:String,
     line:usize
@@ -83,10 +83,20 @@ impl Tokenizer {
         }
         None
     }
+    
+    /// Call this function to begin the tokenizer. If the tokenizer is successful, this will return Ok()
+    pub fn start(&mut self) -> io::Result<()> {
+        self.tokens.clear();
+        self.cur_char = self.input.chars().next().unwrap();
+        self.cur_line = 1;
+        self.char_index = 0;
+        self.advance();
+        self.parse()
+    }
 
     /// Main function of the recursive descent parser.
-    /// Call this function to begin the tokenizer. If the tokenizer is successful, this will return Ok()
-    pub fn parse(&mut self) -> io::Result<()> {
+    
+    fn parse(&mut self) -> io::Result<()> {
         match self.cur_char {
             '_' => self.add_token(TokenType::Null, String::from("λ")),
             '.' => self.add_token(TokenType::Dot, String::from(".")),
@@ -129,6 +139,21 @@ impl Tokenizer {
         
         Ok(())
     }
+
+    /*fn parse_whitespace(&mut self) {
+        let mut peek = self.peek_next();
+        let mut is_ws = false;
+        while is_ws {
+            match peek {
+                Some(c) => is_ws = c.is_whitespace(),
+                None => is_ws = false
+            };
+            if is_ws {
+                self.advance();
+                peek = self.peek_next();
+            }
+        }
+    }*/
 
     /// Parses a number token.
     /// This function assumes that the first digit of the number was placed in self.word_stack already.
