@@ -6,7 +6,7 @@
 use std::io;
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum TokenType {
     Number,         // Decimal or Hex Number
     Dot,            // .
@@ -18,18 +18,20 @@ pub enum TokenType {
     Label,          // states, render
     Direction,      // l, r, u, d
     Newline,        // \n
-    Space 
+    Space,
+    Tab,
+    Invalid
 }
 impl fmt::Display for TokenType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
        write!(f, "{:?}", self)
     }
 }
-
+#[derive(Clone)]
 pub struct Token {
-    ttype:TokenType,
-    lexeme:String,
-    line:usize
+    pub ttype:TokenType,
+    pub lexeme:String,
+    pub line:usize
 }
 
 impl Token {
@@ -42,7 +44,7 @@ impl Token {
 /// Give the input string when creating a new tokenizer and then call parse().
 /// If the tokenization process is successful, you can retrieve the results from the tokens field.
 pub struct Tokenizer {
-    tokens:Vec<Token>,      // Stores tokens during parsing process.
+    pub tokens:Vec<Token>,      // Stores tokens during parsing process.
     input:String,           // Inputted code.
     char_index:usize,       // Index of current char.
     cur_char:char,          // What char the tokenizer is currently looking at.
@@ -87,10 +89,10 @@ impl Tokenizer {
     /// Call this function to begin the tokenizer. If the tokenizer is successful, this will return Ok()
     pub fn start(&mut self) -> io::Result<()> {
         self.tokens.clear();
-        self.cur_char = self.input.chars().next().unwrap();
+        self.cur_char = self.input.chars().nth(0).unwrap();
         self.cur_line = 1;
         self.char_index = 0;
-        self.advance();
+        //self.advance();
         self.parse()
     }
 
@@ -109,6 +111,7 @@ impl Tokenizer {
             'u' => self.add_token(TokenType::Direction, String::from("u")),
             'd' => self.add_token(TokenType::Direction, String::from("d")),
             ' ' => self.add_token(TokenType::Space, String::from(" ")),
+            '\t' => self.add_token(TokenType::Tab, String::from("\\t")),
             '\n' => {
                 self.add_token(TokenType::Newline, String::from("\\n"));
                 self.cur_line += 1;
@@ -206,16 +209,16 @@ impl Tokenizer {
             None => ()
         }
     }
+}
 
-    pub fn print_tokens(&self) {
-        println!("Input:\n----------\n{}\n\n\n~~TOKENS~~\n", self.input);
-        println!("Type\t\t  Lexeme\t  Line #\n----------------------------------------");
-        for t in self.tokens.iter() {
-            println!("{}\t\t  {}\t\t  {}", t.ttype, t.lexeme, t.line);
-            match t.ttype {
-                TokenType::Newline => println!(),
-                _ => ()
-            };
-        }
+pub fn print_tokens(tokens:&Vec<Token>) {
+    //println!("Input:\n----------\n{}\n\n\n~~TOKENS~~\n", self.input);
+    println!("Type\t\t  Lexeme\t  Line #\n----------------------------------------");
+    for t in tokens.iter() {
+        println!("{}\t\t  {}\t\t  {}", t.ttype, t.lexeme, t.line);
+        match t.ttype {
+            TokenType::Newline => println!(),
+            _ => ()
+        };
     }
 }
