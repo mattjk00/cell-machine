@@ -20,7 +20,8 @@ pub enum TokenType {
     Newline,        // \n
     Space,
     Tab,
-    Invalid
+    Invalid,
+    EOF
 }
 impl fmt::Display for TokenType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -93,7 +94,14 @@ impl Tokenizer {
         self.cur_line = 1;
         self.char_index = 0;
         //self.advance();
-        self.parse()
+        let parse_result = self.parse();
+
+        // Add an EOF token if parse was success
+        match parse_result {
+            Ok(o) => self.tokens.push(Token::new(TokenType::EOF, "EOF".to_string(), self.cur_line)),
+            _ => ()
+        };
+        parse_result
     }
 
     /// Main function of the recursive descent parser.
@@ -110,7 +118,7 @@ impl Tokenizer {
             'r' => self.add_token(TokenType::Direction, String::from("r")),
             'u' => self.add_token(TokenType::Direction, String::from("u")),
             'd' => self.add_token(TokenType::Direction, String::from("d")),
-            ' ' => self.add_token(TokenType::Space, String::from(" ")),
+            ' ' => self.add_token(TokenType::Space, String::from("~")),
             '\t' => self.add_token(TokenType::Tab, String::from("\\t")),
             '\n' => {
                 self.add_token(TokenType::Newline, String::from("\\n"));
@@ -213,9 +221,11 @@ impl Tokenizer {
 
 pub fn print_tokens(tokens:&Vec<Token>) {
     //println!("Input:\n----------\n{}\n\n\n~~TOKENS~~\n", self.input);
-    println!("Type\t\t  Lexeme\t  Line #\n----------------------------------------");
+    println!("Type\t\tLexeme\t\tLine #\t\tIndex\n-----------------------------------------------------");
+    let mut index = 0;
     for t in tokens.iter() {
-        println!("{}\t\t  {}\t\t  {}", t.ttype, t.lexeme, t.line);
+        println!("{:4}\t\t{:4}\t\t{:4}\t\t{:4}", t.ttype, t.lexeme, t.line, index);
+        index += 1;
         match t.ttype {
             TokenType::Newline => println!(),
             _ => ()
