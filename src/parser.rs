@@ -71,6 +71,12 @@ impl Parser {
         }
         while self.cur_token.ttype == TokenType::Number {
             self.cur_rule.owner_state = self.cur_token.lexeme.parse().unwrap();
+
+            // Rules for state 0 are not allowed
+            if self.cur_rule.owner_state == 0 {
+                self.error("Rules for state 0 (Dead State) are not permitted.".to_string());
+            }
+
             self.advance();
             self.neigh();
             self.offspring();
@@ -157,6 +163,10 @@ impl Parser {
         }
         else if self.cur_token.ttype == TokenType::Null {
             self.cur_rule.move_to = BioMove::new_const('_');
+            self.advance();
+        }
+        else if self.cur_token.ttype == TokenType::Absorb {
+            self.cur_rule.move_to = BioMove::new_const('@');
             self.advance();
         }
         else {

@@ -3,8 +3,8 @@ const MOVES:[char; 4] = ['l', 'r', 'u', 'd']; // Left Up Right Down
 
 #[derive(Clone)]
 pub struct BioMove {
-    is_random:bool,
-    constant:char
+    pub is_random:bool,
+    pub constant:char
 }
 
 impl BioMove {
@@ -40,7 +40,7 @@ impl BioRule {
         BioRule { neighbors:vec![], neighbors_state:0, owner_state:0,
              next_state:0, move_to:BioMove::new_const('_'),
             any_neighbor:false,
-            any_neighbor_state:false, offspring:0, any_neighbor_count:0 }
+            any_neighbor_state:false, offspring:0, any_neighbor_count:1 }
     }
 
     pub fn print(&self) {
@@ -57,5 +57,32 @@ impl BioRule {
         print!("\n\t");
         println!("NState: {}\tMove:{}\tOffspring:{}\tNext:{}", self.neighbors_state, self.move_to.constant, self.offspring, self.next_state);
         
+    }
+}
+
+/// RuleSet is a helper data structure for organizing a list of bio rules.
+/// Given an unsorted vector of biorules, RuleSet will organize these into a 2d vector
+/// with form { { n, n, n}, {m, m, m}, ... } where n is state 1 rules, m is state 2 rules, etc...
+#[derive(Clone)]
+pub struct RuleSet {
+    rules:Vec<Vec<BioRule>>,
+    nstates:usize
+}
+
+impl RuleSet {
+    pub fn new(rules:Vec<BioRule>, nstates:usize) -> RuleSet {
+        // size nstates - 1 because we won't store rules for state 0.
+        let mut rs = RuleSet { rules:vec![vec![]; nstates - 1], nstates:nstates };
+
+        for r in rules {
+            rs.rules[ (r.owner_state - 1) as usize].push(r);
+        }
+
+        rs
+    }
+
+    /// Returns a list of the rules for a given state.
+    pub fn state_rules(&self, state:usize) -> &Vec<BioRule> {
+        &self.rules[state]
     }
 }

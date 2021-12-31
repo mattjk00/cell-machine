@@ -5,6 +5,8 @@ states 4
 1 *.1 _ _ 0	# If trapped by competition, die
 1 ^2.1 _ ^ 1	# Try to separate self from competition. If neighboring 2, run.
 
+1 {0,1}.0 _ ^ 2 # Multiple Explicit Neighbor Syntax, not implemented yet
+
 2 *_0 _ _ 0	# If no energy source in state 2, die
 
 3 *.0 _ _ 0	# Energy dies out if alone

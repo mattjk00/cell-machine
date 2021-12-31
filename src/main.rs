@@ -1,6 +1,7 @@
 mod tokenizer;
 mod parser;
 mod bio;
+mod processor;
 use crate::tokenizer::{Tokenizer, print_tokens};
 use crate::parser::Parser;
 use rand::Rng;
