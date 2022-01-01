@@ -1,16 +1,16 @@
 use rand::{prelude::ThreadRng, Rng};
 
 use crate::bio::{BioRule, RuleSet};
-use std::collections::{HashSet, HashMap};
+use std::collections::HashMap;
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
-struct Point {
-    x:usize,
-    y:usize
+pub struct Point {
+    pub x:usize,
+    pub y:usize
 }
 
 impl Point {
-    fn new(x:usize, y:usize) -> Point {
+    pub fn new(x:usize, y:usize) -> Point {
         Point { x, y }
     }
 
@@ -41,11 +41,11 @@ const NEIGHBOR_POS:[V; 4] = [V { x:1, y:0 }, V { x:0, y:1 }, V { x:-1, y:0 }, V 
 //const MOVE_VALS:HashMap<char, V> = [ ('l', V {x:-1, y:0}) ].into();
 
 pub struct Processor {
-    rule_set:RuleSet,
+    pub rule_set:RuleSet,
     grid:Vec<Vec<i32>>,
     grid_width:usize,
     grid_height:usize,
-    cell_map:HashMap<Point, i32>,     // Keeps track of where active cells are. Does not keep track of state 0, aka dead state.
+    pub cell_map:HashMap<Point, i32>,     // Keeps track of where active cells are. Does not keep track of state 0, aka dead state.
     rand:ThreadRng
 }
 
@@ -61,7 +61,7 @@ impl Processor {
 
     pub fn step(&mut self) {
         let exec_rules = self.get_exec_rules();
-
+        println!("Executing {} rules.", exec_rules.len());
         for rule in exec_rules.iter() {
             self.execute_rule(rule.1, rule.0.to_owned());
         }
@@ -76,8 +76,12 @@ impl Processor {
             let cell = c.0;
             // Get the state of the current cell.
             let c_state = self.grid[cell.y][cell.x] as usize;
+            if c_state == 0 {
+                continue; // happens if second rule is trying to be applied to a cell that has already changed.
+            }
             // Get the rules that should be applied to this cell.
             let rules = self.rule_set.state_rules(c_state);
+            //println!("Cell: {}, {} state: {}, {} rules", cell.x, cell.y, c_state, rules.len());
 
             // Process the rules
             for rule in rules.iter() {
@@ -163,7 +167,7 @@ impl Processor {
             self.set_cell(rule.next_state, next_pos.x, next_pos.y);
         }
         else {
-            let translate = V { x:self.rand.gen_range(0..self.grid_width) as i32, y:self.rand.gen_range(0..self.grid_height) as i32 };
+            let translate = V { x:self.rand.gen_range(-1..1) as i32, y:self.rand.gen_range(-1..1) as i32 };
             let mut next_pos = pos.clone();
             next_pos.add_v(translate);
             self.set_cell(rule.next_state, next_pos.x, next_pos.y);

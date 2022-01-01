@@ -73,16 +73,28 @@ impl RuleSet {
     pub fn new(rules:Vec<BioRule>, nstates:usize) -> RuleSet {
         // size nstates - 1 because we won't store rules for state 0.
         let mut rs = RuleSet { rules:vec![vec![]; nstates - 1], nstates:nstates };
-
-        for r in rules {
-            rs.rules[ (r.owner_state - 1) as usize].push(r);
+        println!("BUILDING RULESET: {}", rules.len());
+        for r in &rules {
+            rs.rules[ (r.owner_state - 1) as usize].push(r.clone());
         }
+        println!("rs.rules[0].len() = {}", rs.rules[0].len());
 
         rs
     }
 
     /// Returns a list of the rules for a given state.
     pub fn state_rules(&self, state:usize) -> &Vec<BioRule> {
-        &self.rules[state]
+        &self.rules[state - 1]
+    }
+
+    pub fn print(&self) {
+        println!("{} state RuleSet:", self.nstates);
+        for i in 0..self.rules.len() {
+            print!("{}: ", i);
+            for j in 0..self.rules[i].len() {
+                self.rules[i][j].print();
+            }
+            println!();
+        }
     }
 }

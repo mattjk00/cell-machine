@@ -27,11 +27,11 @@ N used to denote any number, can be nullable
 /// The parser is used to create a list of BioRules
 pub struct Parser {
     pub input: Vec<Token>,
-    rules: Vec<BioRule>,
+    pub rules: Vec<BioRule>,
     cur_rule:BioRule,
     cur_token:Token,
     cur_index:usize,
-    n_states:i32
+    pub n_states:i32
 }
 
 impl Parser {
