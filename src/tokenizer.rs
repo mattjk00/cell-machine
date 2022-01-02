@@ -5,6 +5,7 @@
  */
 use std::io;
 use std::fmt;
+use std::fs;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum TokenType {
@@ -58,6 +59,12 @@ impl Tokenizer {
     pub fn new(inp:String) -> Tokenizer {
         let first = inp.chars().next().unwrap();
         Tokenizer { tokens:vec![], input:inp, char_index:0, cur_char:first, word_stack:vec![], cur_line:1 }
+    }
+
+    pub fn new_from_file(path:String) -> Tokenizer {
+        let data = fs::read_to_string(path).expect("Failed to open source file!");
+        println!("File: {}", data);
+        Tokenizer::new(data)
     }
 
     /// Creates and stores a token in the tokenizer's list.
@@ -145,7 +152,7 @@ impl Tokenizer {
             }
         };
         if self.advance() {
-            self.parse();
+            self.parse().expect("PARSE FAIL");
         }
         
         Ok(())

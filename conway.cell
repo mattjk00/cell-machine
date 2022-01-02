@@ -1,16 +1,12 @@
 states 3
-
 # 2 = Live cell
 # 1 = Dead cell
 
-2 ^3.1 _ _ 1    # Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-                # If in state 1 and any 3 neighbors are dead, dont move and die.
-
-2 ^4.2 _ _ 1
+2 ^7.1 _ _ 1    # Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+                
+2 ^4.2 _ _ 1    # Overpopulation
 
 2 ^2.2 _ _ 2    # Any live cell with two or three live neighbours lives on to the next generation.
 2 ^3.2 _ _ 2
-
-
 
 1 ^3.2 _ _ 2

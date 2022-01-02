@@ -37,7 +37,11 @@ struct V {
     y:i32
 }
 
-const NEIGHBOR_POS:[V; 4] = [V { x:1, y:0 }, V { x:0, y:1 }, V { x:-1, y:0 }, V { x:-1, y:-1 } ];
+// Neighbors
+// 3 2 1
+// 4 * 0
+// 5 6 7
+const NEIGHBOR_POS:[V; 8] = [V { x:1, y:0 }, V { x:1, y:1 }, V { x:0, y:1 }, V {x:-1, y:1}, V { x:-1, y:0 }, V { x:-1, y:-1}, V { x:0, y:-1 }, V {x:1, y:-1} ];
 //const MOVE_VALS:HashMap<char, V> = [ ('l', V {x:-1, y:0}) ].into();
 
 pub struct Processor {
@@ -63,6 +67,8 @@ impl Processor {
         let exec_rules = self.get_exec_rules();
         println!("Executing {} rules.", exec_rules.len());
         for rule in exec_rules.iter() {
+            //println!("\tExecuting rule for state {}.", rule.1.owner_state);
+            rule.1.print();
             self.execute_rule(rule.1, rule.0.to_owned());
         }
     }
@@ -145,7 +151,7 @@ impl Processor {
 
     fn get_all_neighbors(&self, cell:Point) -> Vec<Option<i32>> {
         let mut n = vec![];
-        for i in 0..4 {
+        for i in 0..8 {
             n.push(self.get_neighbor_state(cell.clone(), i));
         }
         n

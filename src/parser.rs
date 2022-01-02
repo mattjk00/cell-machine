@@ -69,7 +69,13 @@ impl Parser {
             self.num();
             self.consume(TokenType::Newline);
         }
-        while self.cur_token.ttype == TokenType::Number {
+        while self.cur_token.ttype == TokenType::Number || self.cur_token.ttype == TokenType::Newline {
+            
+            if self.cur_token.ttype == TokenType::Newline {
+                self.advance();
+                continue;
+            }
+
             self.cur_rule.owner_state = self.cur_token.lexeme.parse().unwrap();
 
             // Rules for state 0 are not allowed
@@ -131,7 +137,7 @@ impl Parser {
     }
 
     fn all_neigh(&mut self) {
-        self.cur_rule.neighbors.extend(0..self.n_states);
+        self.cur_rule.neighbors.extend(0..8);
         self.advance();
     }
 

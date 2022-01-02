@@ -2,7 +2,7 @@ mod tokenizer;
 mod parser;
 mod bio;
 mod processor;
-use crate::tokenizer::Tokenizer;
+use crate::tokenizer::{Tokenizer, print_tokens};
 use crate::parser::Parser;
 use bio::RuleSet;
 use macroquad::prelude::*;
@@ -21,15 +21,16 @@ fn window_conf() -> Conf {
 
 #[macroquad::main(window_conf)]
 async fn main() {
-    let mut t = Tokenizer::new("states 3\n2 ^3.1 _ _ 1\n2 ^2.2 _ _ 2\n2 ^3.2 _ _ 2\n2 ^4.2 _ _ 1\n1 ^3.2 _ _ 2".to_string());
+    //let mut t = Tokenizer::new("states 3\n2 ^3.1 _ _ 1\n2 ^2.2 _ _ 2\n2 ^3.2 _ _ 2\n2 ^4.2 _ _ 1\n1 ^3.2 _ _ 2".to_string());
+    let mut t = Tokenizer::new_from_file("conway.cell".to_string());
     let result = t.start();
 
     let rng = ::rand::thread_rng();
     
     match result {
         Ok(()) => { 
-            println!("Parse Success.");
-            //print_tokens(&t.tokens); 
+            println!("Tokenizer Success.");
+            print_tokens(&t.tokens); 
         },
         Err(e) => println!("{}", e)
     };
@@ -41,7 +42,8 @@ async fn main() {
 
     let size:usize = 32;
     let rule_set = RuleSet::new(parser.rules, parser.n_states as usize);
-    
+    rule_set.print();
+
     //rule_set.print();
     let mut processor = Processor::new(rule_set, size, size);
     for y in 0..size {
@@ -52,6 +54,9 @@ async fn main() {
     processor.set_cell(2, 9, 9);
     processor.set_cell(2, 10, 9);
     processor.set_cell(2, 9, 10);
+    processor.set_cell(2, 9, 11);
+    processor.set_cell(2, 10, 11);
+    //processor.set_cell(1, 10, 10);
     
     let mut timer:f32 = 0.0;
 
