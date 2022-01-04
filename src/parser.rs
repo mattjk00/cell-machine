@@ -1,6 +1,3 @@
-use std::io::{Error, Result, ErrorKind};
-use rand::prelude::ThreadRng;
-
 use crate::{tokenizer::{Token, TokenType, print_tokens}, bio::{BioRule, BioMove}};
 /*
 Grammar
@@ -36,7 +33,7 @@ pub struct Parser {
 
 impl Parser {
     /// Create a new parser with given token input.
-    pub fn new(inp:Vec<Token>, rng:ThreadRng) -> Parser {
+    pub fn new(inp:Vec<Token>) -> Parser {
         let curt:Token = inp[0].clone();
         Parser { input:inp, rules:vec![], cur_rule:BioRule::new_blank(), cur_index:0, cur_token:curt, n_states:0 }
     }
@@ -63,38 +60,43 @@ impl Parser {
     // ---- Parsing Functions ---- //
 
     fn sys(&mut self) {
+        // Begin looking for the 'states' keyword
         if self.cur_token.lexeme == "states" {
             self.advance();
-            //self.consume(TokenType::Space);
             self.num();
             self.consume(TokenType::Newline);
         }
+        // Look through rule definitions
         while self.cur_token.ttype == TokenType::Number || self.cur_token.ttype == TokenType::Newline {
-            
+            // Skip over blank lines
             if self.cur_token.ttype == TokenType::Newline {
                 self.advance();
                 continue;
             }
 
-            self.cur_rule.owner_state = self.cur_token.lexeme.parse().unwrap();
+            // Parse the first part of the rule, the owner state.
+            self.cur_rule.owner_state = self.cur_token.lexeme.parse().expect("Invalid token lexeme for owner state.");
 
             // Rules for state 0 are not allowed
             if self.cur_rule.owner_state == 0 {
                 self.error("Rules for state 0 (Dead State) are not permitted.".to_string());
             }
 
+            // Parse the next chunk of the rule definition.
             self.advance();
             self.neigh();
             self.offspring();
             self.mov();
 
-            // Parse the next state
+            // Parse the 'next state' part of the rule.
             let lex = self.consume(TokenType::Number);
-            self.cur_rule.next_state = lex.parse().unwrap();
-
+            self.cur_rule.next_state = lex.parse().expect("Invalid next state for rule!");
+            // Save the parsed rule.
             self.rules.push(self.cur_rule.clone());
+            // Reset the rule for the next parser pass
             self.cur_rule = BioRule::new_blank();
 
+            // If end of file reached, advance on and end. Otherwise, expect a newline char.
             if self.cur_token.ttype == TokenType::EOF {
                 self.advance();
             }
@@ -180,42 +182,7 @@ impl Parser {
         }
     }
 
-    // ---- End Parsing Functions ---- //
-
-    /// Removes unnecessary repeated whitespace tokens.
-    /// This function is perhaps not needed, a space() production may be more efficient.
-    #[deprecated]
-    fn sanitize_whitespace(&mut self) {
-        let mut is_space:bool;
-        let mut search_i:usize = 0;
-        let mut first_space = true;
-
-        let input_copy = self.input.clone();
-
-        for t in input_copy {
-            match t.ttype {
-                TokenType::Space | TokenType::Tab => is_space = true,
-                _ => is_space = false
-            };
-
-            if is_space && !first_space {
-                // Mark excess whitespace for removal
-                self.input[search_i].ttype = TokenType::Invalid;
-            }
-            else if is_space && first_space {
-                first_space = false;
-            }
-            else if !is_space {
-                first_space = true;
-            }
-            search_i += 1;
-        }
-        // Clear out excess whitespace
-        self.input.retain(|t| match t.ttype {
-            TokenType::Invalid => false,
-            _ => true
-        });
-    }
+    // ---- End Parsing Functions ---- //    
 
     fn advance(&mut self) -> bool {
         self.cur_index += 1;
@@ -257,6 +224,7 @@ impl Parser {
         std::process::exit(1);
     }
 
+    #[allow(dead_code)]
     pub fn print_results(&self) {
         println!("Parser Results:\n");
         for r in self.rules.iter() {

@@ -1,10 +1,10 @@
 
 use std::collections::hash_map::DefaultHasher;
-use std::hash::{Hash, Hasher};
+use std::hash::Hasher;
 
-use rand::{Rng, prelude::ThreadRng};
-const MOVES:[char; 4] = ['l', 'r', 'u', 'd']; // Left Up Right Down
-
+/// A helper struct for defining how a cell should move
+/// If the is_random flag is set to true, then the cell will move to a random empty space.
+/// The constant char will be one of l, r, u, d. In the future, diagonal should be added.
 #[derive(Clone)]
 pub struct BioMove {
     pub is_random:bool,
@@ -18,14 +18,11 @@ impl BioMove {
     pub fn new_rand() -> BioMove {
         BioMove { is_random:true, constant:'^' } 
     }
-    /*fn value(&mut self) -> char {
-        let rand:usize = self.t_rng.gen_range(0..4) as usize;
-        match self.is_random {
-            false => self.constant,
-            true => MOVES[rand]
-        }
-    }*/
 }
+
+/// The BioRule struct is a representation of a rule written in a cell definition file.
+/// It has data that says what type of cell the rule is for, what neighbors to check and for what state,
+/// where the cell should move, and what state the cell should go to next.
 #[derive(Clone)]
 pub struct BioRule {
     pub neighbors:Vec<i32>,     // Neighbors to check out
@@ -47,6 +44,8 @@ impl BioRule {
             any_neighbor_state:false, offspring:0, any_neighbor_count:1 }
     }
 
+    /// Useful for debugging the parser and processor.
+    /// Prints out a simple representation of the rule.
     pub fn print(&self) {
         print!("State {} Rule:\n\t", self.owner_state);
         print!("Neighbors: ");
@@ -59,10 +58,10 @@ impl BioRule {
             print!("Any {}", self.any_neighbor_count);
         }
         print!("\n\t");
-        println!("NState: {}\tMove:{}\tOffspring:{}\tNext:{}\tAnyNeigh:{}", self.neighbors_state, self.move_to.constant, self.offspring, self.next_state, self.any_neighbor);
-        
+        println!("NState: {}\tMove:{}\tOffspring:{}\tNext:{}\tAnyNeigh:{}", self.neighbors_state, self.move_to.constant, self.offspring, self.next_state, self.any_neighbor);        
     }
 
+    /// Used for assigning a unique id to a rule for debugging purposes.
     pub fn calc_hash(&self) -> u64 {
         let mut s = DefaultHasher::new();
         s.write_i32(self.neighbors_state);

@@ -9,7 +9,6 @@ use crate::tokenizer::{Tokenizer, print_tokens};
 use crate::parser::Parser;
 use bio::RuleSet;
 use macroquad::prelude::*;
-use macroquad::prelude::coroutines::wait_seconds;
 use processor::Processor;
 
 fn window_conf() -> Conf {
@@ -28,7 +27,6 @@ async fn main() {
     let mut t = Tokenizer::new_from_file("conway.cell".to_string());
     let result = t.start();
 
-    let rng = ::rand::thread_rng();
     
     match result {
         Ok(()) => { 
@@ -38,7 +36,7 @@ async fn main() {
         Err(e) => println!("{}", e)
     };
 
-    let mut parser = Parser::new(t.tokens, rng);
+    let mut parser = Parser::new(t.tokens);
     parser.start();
     //..parser.print_results();
     //print_tokens(&parser.input);
