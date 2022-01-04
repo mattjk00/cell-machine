@@ -65,7 +65,7 @@ impl Processor {
 
     pub fn step(&mut self) {
         let exec_rules = self.get_exec_rules();
-        println!("Executing {} rules", exec_rules.len());
+        //println!("Executing {} rules", exec_rules.len());
         
 
         for rule in exec_rules.iter() {
@@ -133,7 +133,7 @@ impl Processor {
                             None => {}
                         }
                     }
-                    if counted_neighbors >= rule.any_neighbor_count {
+                    if counted_neighbors == rule.any_neighbor_count {
                         
                         exec_rules.insert(cell.to_owned(), rule.clone());
                     }

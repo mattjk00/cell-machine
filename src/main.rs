@@ -49,15 +49,20 @@ async fn main() {
     let mut processor = Processor::new(rule_set, size, size);
     for y in 0..size {
         for x in 0..size {
-            processor.set_cell(1, x, y);
+            processor.set_cell(2, x, y);
         }
     }
-    processor.set_cell(2, 9, 9);
+    processor.set_cell(1, 9, 9);
     //processor.set_cell(2, 10, 9);
-    processor.set_cell(2, 9, 10);
-    processor.set_cell(2, 9, 11);
-    processor.set_cell(2, 10, 11);
-    processor.set_cell(2, 10, 10);
+    processor.set_cell(1, 9, 10);
+    processor.set_cell(1, 9, 11);
+    processor.set_cell(1, 10, 11);
+    processor.set_cell(1, 10, 10);
+    processor.set_cell(1, 10, 12);
+    processor.set_cell(1, 11, 12);
+
+    //processor.step();
+    //processor.step();
     
     let mut timer:f32 = 0.0;
 
@@ -68,9 +73,9 @@ async fn main() {
         for p in &processor.cell_map {
             let state = p.1.to_owned();
             let pos = p.0.to_owned();
-            let mut color = BLUE;
-            if state == 2 {
-                color = GREEN;
+            let mut color = GRAY;
+            if state == 1 {
+                color = YELLOW;
             }
             
 
@@ -87,7 +92,7 @@ async fn main() {
         }
 
         timer += get_frame_time();
-        if timer > 0.5 {
+        if timer > 0.3 {
             processor.step();
             timer = 0.0;
         }

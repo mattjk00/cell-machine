@@ -131,6 +131,7 @@ impl Tokenizer {
                 self.add_token(TokenType::Newline, String::from("\\n"));
                 self.cur_line += 1;
             },
+            '\r' => (),
             '#' => {
                 self.advance();
                 self.parse_comment();
