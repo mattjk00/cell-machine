@@ -1,3 +1,7 @@
+
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
+
 use rand::{Rng, prelude::ThreadRng};
 const MOVES:[char; 4] = ['l', 'r', 'u', 'd']; // Left Up Right Down
 
@@ -55,8 +59,18 @@ impl BioRule {
             print!("Any {}", self.any_neighbor_count);
         }
         print!("\n\t");
-        println!("NState: {}\tMove:{}\tOffspring:{}\tNext:{}", self.neighbors_state, self.move_to.constant, self.offspring, self.next_state);
+        println!("NState: {}\tMove:{}\tOffspring:{}\tNext:{}\tAnyNeigh:{}", self.neighbors_state, self.move_to.constant, self.offspring, self.next_state, self.any_neighbor);
         
+    }
+
+    pub fn calc_hash(&self) -> u64 {
+        let mut s = DefaultHasher::new();
+        s.write_i32(self.neighbors_state);
+        s.write_i32(self.next_state);
+        s.write_i32(self.offspring);
+        s.write_i32(self.owner_state);
+        s.write_i32(self.any_neighbor_count);
+        s.finish()
     }
 }
 
@@ -73,25 +87,29 @@ impl RuleSet {
     pub fn new(rules:Vec<BioRule>, nstates:usize) -> RuleSet {
         // size nstates - 1 because we won't store rules for state 0.
         let mut rs = RuleSet { rules:vec![vec![]; nstates - 1], nstates:nstates };
-        println!("BUILDING RULESET: {}", rules.len());
         for r in &rules {
             rs.rules[ (r.owner_state - 1) as usize].push(r.clone());
         }
-        println!("rs.rules[0].len() = {}", rs.rules[0].len());
 
         rs
     }
 
     /// Returns a list of the rules for a given state.
-    pub fn state_rules(&self, state:usize) -> &Vec<BioRule> {
-        &self.rules[state - 1]
+    pub fn state_rules(&self, state:usize) -> Option<&Vec<BioRule>> {
+        let index = state - 1;
+        if index < self.rules.len() {
+            Some(&self.rules[index])
+        } else {
+            None
+        }
     }
 
     pub fn print(&self) {
         println!("{} state RuleSet:", self.nstates);
         for i in 0..self.rules.len() {
-            print!("{}: ", i);
+            
             for j in 0..self.rules[i].len() {
+                green!("({},{}) - {:4}:\n\t", i, j, self.rules[i][j].calc_hash());
                 self.rules[i][j].print();
             }
             println!();

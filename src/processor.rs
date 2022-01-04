@@ -65,11 +65,19 @@ impl Processor {
 
     pub fn step(&mut self) {
         let exec_rules = self.get_exec_rules();
-        println!("Executing {} rules.", exec_rules.len());
+        println!("Executing {} rules", exec_rules.len());
+        
+
         for rule in exec_rules.iter() {
-            //println!("\tExecuting rule for state {}.", rule.1.owner_state);
-            rule.1.print();
-            self.execute_rule(rule.1, rule.0.to_owned());
+            //green!("\tRule {} // ", rule.1.calc_hash());
+            //e_yellow_ln!("({}, {})", rule.0.x, rule.0.y);
+            //rule.1.print();
+
+            // ensure grid is in the correct state.
+            if self.grid[rule.0.y][rule.0.x] == rule.1.owner_state {
+                self.execute_rule(rule.1, rule.0.to_owned());
+            }
+            
         }
     }
 
@@ -86,8 +94,10 @@ impl Processor {
                 continue; // happens if second rule is trying to be applied to a cell that has already changed.
             }
             // Get the rules that should be applied to this cell.
-            let rules = self.rule_set.state_rules(c_state);
+            let rules = self.rule_set.state_rules(c_state).expect(format!("Unexpected State found in system: {}", c_state).as_str());
+
             //println!("Cell: {}, {} state: {}, {} rules", cell.x, cell.y, c_state, rules.len());
+            
 
             // Process the rules
             for rule in rules.iter() {
@@ -99,7 +109,7 @@ impl Processor {
                         match neighbor {
                             Some(s) => {
                                 if s.to_owned() == rule.neighbors_state {
-                                    //self.execute_rule(rule, cell);
+                                    
                                     exec_rules.insert(cell.to_owned(), rule.clone());
                                 }
                             },
@@ -124,11 +134,13 @@ impl Processor {
                         }
                     }
                     if counted_neighbors >= rule.any_neighbor_count {
-                        //self.execute_rule(rule, cell.to_owned());
+                        
                         exec_rules.insert(cell.to_owned(), rule.clone());
                     }
                 }
             }
+            
+            
         }
         
         exec_rules
@@ -173,9 +185,12 @@ impl Processor {
             self.set_cell(rule.next_state, next_pos.x, next_pos.y);
         }
         else {
-            let translate = V { x:self.rand.gen_range(-1..1) as i32, y:self.rand.gen_range(-1..1) as i32 };
             let mut next_pos = pos.clone();
-            next_pos.add_v(translate);
+            while self.grid[next_pos.y][next_pos.x] != 0 {
+                next_pos = pos.clone();
+                let translate = V { x:self.rand.gen_range(-1..2) as i32, y:self.rand.gen_range(-1..2) as i32 };            
+                next_pos.add_v(translate);
+            }
             self.set_cell(rule.next_state, next_pos.x, next_pos.y);
         }
     }

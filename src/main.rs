@@ -1,7 +1,10 @@
+#[macro_use]
+extern crate colour;
 mod tokenizer;
 mod parser;
 mod bio;
 mod processor;
+
 use crate::tokenizer::{Tokenizer, print_tokens};
 use crate::parser::Parser;
 use bio::RuleSet;
@@ -37,7 +40,7 @@ async fn main() {
 
     let mut parser = Parser::new(t.tokens, rng);
     parser.start();
-    ..parser.print_results();
+    //..parser.print_results();
     //print_tokens(&parser.input);
 
     let size:usize = 32;
@@ -52,11 +55,11 @@ async fn main() {
         }
     }
     processor.set_cell(2, 9, 9);
-    processor.set_cell(2, 10, 9);
+    //processor.set_cell(2, 10, 9);
     processor.set_cell(2, 9, 10);
     processor.set_cell(2, 9, 11);
     processor.set_cell(2, 10, 11);
-    //processor.set_cell(1, 10, 10);
+    processor.set_cell(2, 10, 10);
     
     let mut timer:f32 = 0.0;
 
@@ -67,10 +70,11 @@ async fn main() {
         for p in &processor.cell_map {
             let state = p.1.to_owned();
             let pos = p.0.to_owned();
-            let mut color = BLACK;
+            let mut color = BLUE;
             if state == 2 {
                 color = GREEN;
             }
+            
 
             draw_rectangle(pos.x as f32 * 20.0, pos.y as f32 * 20.0, 20.0, 20.0, color);
         }
@@ -85,7 +89,7 @@ async fn main() {
         }
 
         timer += get_frame_time();
-        if timer > 1.0 {
+        if timer > 0.5 {
             processor.step();
             timer = 0.0;
         }
