@@ -30,6 +30,7 @@ pub struct BioRule {
     pub any_neighbor:bool,      // Set true if the rule could be about ANY neighbor
     pub any_neighbor_count:i32, // How many neighbors. If 0, then all neighbors
     pub any_neighbor_state:bool,// Set true if the neighbor's state can be anything
+    pub any_neighbor_exact:bool,// Set true if the neighbor qualifier should be an exact count.
     pub owner_state:i32,        // What the owner's state should be
     pub next_state:i32,         // Transorm state
     pub move_to:BioMove,        // Where to move after rule,
@@ -41,7 +42,7 @@ impl BioRule {
         BioRule { neighbors:vec![], neighbors_state:0, owner_state:0,
              next_state:0, move_to:BioMove::new_const('_'),
             any_neighbor:false,
-            any_neighbor_state:false, offspring:0, any_neighbor_count:1 }
+            any_neighbor_state:false, offspring:0, any_neighbor_count:1, any_neighbor_exact:false }
     }
 
     /// Useful for debugging the parser and processor.

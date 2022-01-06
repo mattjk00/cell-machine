@@ -114,7 +114,8 @@ impl Parser {
         }
         else {
             match self.cur_token.lexeme.as_ref() {
-                "^" => self.any_neigh(),
+                "^" => self.any_neigh(false),
+                "=" => self.any_neigh(true),
                 "*" => self.all_neigh(),
                 _ => self.error(String::from("Expecting number or operator."))
             };
@@ -127,8 +128,9 @@ impl Parser {
         
     }
 
-    fn any_neigh(&mut self) {
+    fn any_neigh(&mut self, exact:bool) {
         self.cur_rule.any_neighbor = true;
+        self.cur_rule.any_neighbor_exact = exact;
         self.advance();
         
         if self.cur_token.ttype == TokenType::Number {

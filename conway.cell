@@ -2,14 +2,14 @@ states 3
 # 1 = Live cell
 # 2 = Dead cell
                 
-1 ^2.1 1 _ 1    # Any live cell with two or three live neighbours lives on to the next generation.
-1 ^3.1 1 _ 1
+1 =2.1 1 _ 1    # Any live cell with two or three live neighbours lives on to the next generation.
+1 =3.1 1 _ 1
 1 ^4.1 2 _ 2    # Overpopulation
-1 ^5.1 2 _ 2
-1 ^6.1 2 _ 2
-1 ^7.1 2 _ 2
-1 ^8.1 2 _ 2
+
 1 ^7.2 2 _ 2    # Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-1 ^8.2 2 _ 2
 
 2 ^3.1 1 _ 1
+
+# # Ideas for language
+# If in state 1 and 2 neighbors are in state 2 then
+#   leave 1, move anywhere, go to state 2

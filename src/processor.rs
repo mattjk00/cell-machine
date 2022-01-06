@@ -133,8 +133,8 @@ impl Processor {
                             None => {}
                         }
                     }
-                    if counted_neighbors == rule.any_neighbor_count {
-                        
+                    if (rule.any_neighbor_exact && counted_neighbors == rule.any_neighbor_count) 
+                        || (!rule.any_neighbor_exact && counted_neighbors >= rule.any_neighbor_count) {                        
                         exec_rules.insert(cell.to_owned(), rule.clone());
                     }
                 }

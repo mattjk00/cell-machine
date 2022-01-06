@@ -15,6 +15,7 @@ pub enum TokenType {
     All,            // *
     Link,           // &
     Any,            // ^
+    Equal,          // =
     Absorb,         // @
     Label,          // states, render
     Direction,      // l, r, u, d
@@ -119,6 +120,7 @@ impl Tokenizer {
             '.' => self.add_token(TokenType::Dot, String::from(".")),
             '*' => self.add_token(TokenType::All, String::from("*")),
             '^' => self.add_token(TokenType::Any, String::from("^")),
+            '=' => self.add_token(TokenType::Equal, String::from("=")),
             '&' => self.add_token(TokenType::Link, String::from("&")),
             '@' => self.add_token(TokenType::Absorb, String::from("@")),
             'l' => self.add_token(TokenType::Direction, String::from("l")),

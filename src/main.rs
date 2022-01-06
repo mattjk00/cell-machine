@@ -4,6 +4,7 @@ mod tokenizer;
 mod parser;
 mod bio;
 mod processor;
+mod config;
 
 use crate::tokenizer::{Tokenizer, print_tokens};
 use crate::parser::Parser;
@@ -59,7 +60,7 @@ async fn main() {
     processor.set_cell(1, 10, 11);
     processor.set_cell(1, 10, 10);
     processor.set_cell(1, 10, 12);
-    processor.set_cell(1, 11, 12);
+    //processor.set_cell(1, 11, 12);
 
     //processor.step();
     //processor.step();
