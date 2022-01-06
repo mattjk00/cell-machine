@@ -54,13 +54,13 @@ async fn main() {
         }
     }
     processor.set_cell(1, 9, 9);
-    //processor.set_cell(2, 10, 9);
+    processor.set_cell(2, 10, 9);
     processor.set_cell(1, 9, 10);
     processor.set_cell(1, 9, 11);
     processor.set_cell(1, 10, 11);
     processor.set_cell(1, 10, 10);
     processor.set_cell(1, 10, 12);
-    //processor.set_cell(1, 11, 12);
+    processor.set_cell(1, 11, 12);
 
     //processor.step();
     //processor.step();

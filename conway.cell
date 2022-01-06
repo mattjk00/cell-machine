@@ -8,7 +8,12 @@ states 3
 
 1 ^7.2 2 _ 2    # Any live cell with fewer than two live neighbours dies, as if by underpopulation.
 
-2 ^3.1 1 _ 1
+2 =3.1 1 _ 1
+
+#render
+#0 101020
+#1 001100
+#2 001001
 
 # # Ideas for language
 # If in state 1 and 2 neighbors are in state 2 then

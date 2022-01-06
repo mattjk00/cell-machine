@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Cellular Machine</title>
+        <!-- UIkit CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css" />
+
+        <!-- UIkit JS -->
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit-icons.min.js"></script>
+    </head>
+    <body class="uk-background-secondary">
+        <div class="uk-section uk-section-muted uk-container">
+            <h1 class="big">CellM</h1>
+            <div class="uk-card uk-card-default uk-light uk-card-body uk-background-secondary uk-grid-collapse uk-child-width-1-2@s" uk-grid>
+                <div class="uk-flex-last@s uk-card-media-right uk-cover-container">
+                    <img src="img.PNG" alt="" uk-cover>
+                    <canvas width="600" height="400"></canvas>
+                </div>
+                
+                <div>
+                    <div class="uk-card-body">
+                        <p>A language for defining cellular automata.</p>
+                        <h4>Features</h4>
+                        <ul class="uk-list uk-list-square">
+                            <li>Create cellular simulations such as Conway's Game of Life.</li>
+                            <li>Simple syntax.</li>
+                            <li>Lightweight interpreter written in Rust.</li>
+                            <li>Renderer agnostic - Simple defulat renderer included.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="uk-section uk-section-muted uk-container">
+            <h3 class="uk-card-title uk-light">Example</h3>
+            <div class="uk-card uk-card-default uk-card-body uk-light uk-background-secondary">
+                <p>Conway's Game of Life</p>
+                <div id="source" class="uk-container">
+                <pre><span class="src1">states</span> 3<span class="src2">        # 3 State System
+                # 1 = Live cell
+                # 2 = Dead cell</span>
+                
+1 <span class="src3">=2.1</span> 1 _ 1    <span class="src2"># Any live cell with two or three live neighbours lives on to the next generation.</span>
+1 <span class="src3">=3.1</span> 1 _ 1
+1 <span class="src4">^4.1</span> 2 _ 2    <span class="src2"># Overpopulation</span>
+1 <span class="src4">^7.2</span> 2 _ 2    <span class="src2"># Any live cell with fewer than two live neighbours dies, as if by underpopulation.</span>
+2 <span class="src3">=3.1</span> 1 _ 1    <span class="src2"># Any dead cell with 3 neighbors comes to life</span></pre>    
+                </div>
+                <p class="uk-text-bold">What is going on here?</p>
+                <ul class="uk-list uk-list-hyphen">
+                    <li>CellM syntax is based off the quintuples that can be used to define turing machines.</li>
+                </ul>
+                <p>Here is the basic grammar for defining a rule:</p>
+                <code>&#x3C;rule&#x3E; = &#x3C;current state&#x3E; (&#x3C;neighbors&#x3E;.&#x3C;neighbor state&#x3E;) &#x3C;offspring&#x3E; &#x3C;move&#x3E; &#x3C;next state&#x3E;</code>
+                <p class="uk-text-bold">Why three states?</p>
+                <ul class="uk-list uk-list-hyphen">
+                    <li>Every CellM system must include the zero state (dead state). No rules can be written for this state. Therefore we define two new states to represent our live and dead cells.</li>
+                </ul>
+                
+            </div>
+            <p class="uk-text-muted uk-text-center">CellM and Website was created by Matthew Kleitz, 2022</p>
+        </div>
+        
+    </body>
+    <style>
+        .src1 {
+            color:rgb(0, 127, 212);
+        }
+        .src2 {
+            color:brown;
+        }
+        .src3 {
+            color:rgb(0, 4, 255);
+        }
+        .src4 {
+            color:green;
+        }
+        pre {
+            color:rgb(70, 70, 70);
+        }
+        .uk-container {
+            background: rgb(44, 44, 44);
+        }
+        .big {
+            color:#99c7ff;
+        }
+        body {
+            background: rgb(134,16,147);
+background: radial-gradient(circle, rgba(134,16,147,1) 0%, rgba(78,126,184,1) 100%);
+        }
+    </style>
+</html>
