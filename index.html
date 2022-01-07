@@ -16,7 +16,7 @@
         
 
         <div class="uk-section uk-section-muted uk-container uk-light">
-            <h1>Cellular Automata</h1>
+            <h1>Cellular Automata Language</h1>
             <ul uk-tab>
                 <li><a href="#">Home</a></li>
                 <li><a href="#">Getting Started</a></li>
@@ -51,14 +51,14 @@
                         <p>Conway's Game of Life</p>
                         <div id="source" class="uk-container">
                         <pre><span class="src1">states</span> 3<span class="src2">        # 3 State System
-                        # 1 = Live cell
-                        # 2 = Dead cell</span>
+                # 1 = Live cell
+                # 2 = Dead cell</span>
                         
-        1 <span class="src3">=2.1</span> 1 _ 1    <span class="src2"># Any live cell with two or three live neighbours lives on to the next generation.</span>
-        1 <span class="src3">=3.1</span> 1 _ 1
-        1 <span class="src4">^4.1</span> 2 _ 2    <span class="src2"># Overpopulation</span>
-        1 <span class="src4">^7.2</span> 2 _ 2    <span class="src2"># Any live cell with fewer than two live neighbours dies, as if by underpopulation.</span>
-        2 <span class="src3">=3.1</span> 1 _ 1    <span class="src2"># Any dead cell with 3 neighbors comes to life</span></pre>    
+1 <span class="src3">=2.1</span> 1 _ 1    <span class="src2"># Any live cell with two or three live neighbours lives on to the next generation.</span>
+1 <span class="src3">=3.1</span> 1 _ 1
+1 <span class="src4">^4.1</span> 2 _ 2    <span class="src2"># Overpopulation</span>
+1 <span class="src4">^7.2</span> 2 _ 2    <span class="src2"># Any live cell with fewer than two live neighbours dies, as if by underpopulation.</span>
+2 <span class="src3">=3.1</span> 1 _ 1    <span class="src2"># Any dead cell with 3 neighbors comes to life</span></pre>    
                         </div>
                         <p class="uk-text-bold">What is going on here?</p>
                         <ul class="uk-list uk-list-hyphen">
@@ -84,7 +84,6 @@
                                 <li class="uk-parent">
                                     <a href="#">CellM</a>
                                     <ul class="uk-nav-sub">
-                                        <li><a href="#">States</a></li>
                                         <li>
                                             <a href="#">Rules</a>
                                             <ul>
@@ -97,7 +96,7 @@
                             </ul>
                         </div>
                         <div>
-                            <h3 class="uk-card-title uk-light uk-width-1-2@s">Simulator Overview</h3>
+                            <h3 class="uk-text-warning">Simulator Overview</h3>
                             <p>
                                 CellM automata are simulated on a 2D square grid. Each square on the grid represents a single cell is assigned a state value. 
                                 The possible states are { 0..n | n >= 2 }. State 0 is reserved as a 'dead' state for the system. This cell generally represents
@@ -105,6 +104,43 @@
                                 When designing a system, you should select your states in sequential order. If you want two active states in your system, represent these
                                 with states 1 and 2. Unnecessary memory will be allocated if larger state numbers are used when not needed.<br/><br/>
                                 Simulation is determined by defined rules. Rules are defined in a similar way to turing machine insuctions.
+                            </p>
+                            
+                            <h3 class="uk-text-warning">Rules</h3>
+                            <p>
+                                Rules tell what action a cell should take depending on its own and neighbors' states. An example of a rule written in English could be: 
+                                <i>"If a cell is in state 1 and the right neighbor is in state 2, move left without leaving offspring and change to state 2".</i>
+                                That is a convoluted statement but it is an example that contains every piece of information that could be encoded in a rule.<br/><br/>
+                                Aa rule definition contains 5 parts:
+                                <ol>
+                                    <li>Current Cell State</li>
+                                    <li>Neighbor Selection</li>
+                                    <li>Offspring</li>
+                                    <li>Movement</li>
+                                    <li>Next Cell State</li>
+                                </ol>
+                                Here is an example of how to define a rule in code:
+                                <br/><code>1 0.2 _ l 2</code><br/>
+                                Notice the 5 tokens separated by spaces. The first character tells us the current cell state. This means that the following rule
+                                will only be applied to cells in this state. In this case, that state is <code>1</code>.
+                                The next token <code>0.2</code> gives another rule execution condition to the interpreter. The condition is 'if the right neighbor (0) is 
+                                in state 2'. Later on this page the syntax will be explained in depth. The next token <code>_</code> is an underscore, which is meant
+                                to represent null or nothing. The third token in the rule tells the interpreter what offspring to leave behind in the current cell's place.
+                                In this case, nothing will be left behind if the cell moves due to this rule. The next token <code>l</code> simply states that the cell should
+                                move left should the rule's conditions be met. The final token <code>2</code> says what state the cell should become next. If this rule is executed,
+                                the grid square to the left of the current cell will change to state 2 and the current cell's square will change to the zero state.
+                            </p>
+                            <h3 class="uk-text-warning">Code File Format</h3>
+                            <p>
+                                The file structure for your automata simulation is reasonably simple.
+                                The first line of every .cal file should declare how many states there are in the system.
+                                After declaring how the state count, write out your rules line by line. And that's all you need!
+                                Comments can be written using the # symbol. Here is an example of a very simple automata:<br/>
+                                <pre>
+<span class="src1">states</span> 2
+1 0.0 1 r 1     <span class="src2"># As long as the right neighbor is in state 0,
+                # move right and leave behind a cell in state 1.</span></pre><br/>
+                                If you placed one cell in state 1 on an empty grid, then that cell would keep moving right indefinitely, leaving a trail.
                             </p>
                         </div>
                         
