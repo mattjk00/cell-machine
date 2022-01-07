@@ -13,56 +13,104 @@
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit-icons.min.js"></script>
     </head>
     <body class="uk-background-secondary">
-        <div class="uk-section uk-section-muted uk-container">
-            <h1 class="big">CellM</h1>
-            <div class="uk-card uk-card-default uk-light uk-card-body uk-background-secondary uk-grid-collapse uk-child-width-1-2@s" uk-grid>
-                <div class="uk-flex-last@s uk-card-media-right uk-cover-container">
-                    <img src="img.PNG" alt="" uk-cover>
-                    <canvas width="600" height="400"></canvas>
-                </div>
-                
-                <div>
-                    <div class="uk-card-body">
-                        <p>A language for defining cellular automata.</p>
-                        <h4>Features</h4>
-                        <ul class="uk-list uk-list-square">
-                            <li>Create cellular simulations such as Conway's Game of Life.</li>
-                            <li>Simple syntax.</li>
-                            <li>Lightweight interpreter written in Rust.</li>
-                            <li>Renderer agnostic - Simple defulat renderer included.</li>
-                        </ul>
+        
+
+        <div class="uk-section uk-section-muted uk-container uk-light">
+            <h1>Cellular Automata</h1>
+            <ul uk-tab>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Getting Started</a></li>
+            </ul>
+
+            <ul class="uk-switcher uk-margin">
+                <li><div>
+                    <h1 class="big">CellM</h1>
+                    <div class="uk-card uk-card-default uk-light uk-card-body uk-background-secondary uk-grid-collapse uk-child-width-1-2@s" uk-grid>
+                        <div class="uk-flex-last@s uk-card-media-right uk-cover-container">
+                            <img src="img.PNG" alt="" uk-cover>
+                            <canvas width="600" height="400"></canvas>
+                        </div>
+                        
+                        <div>
+                            <div class="uk-card-body">
+                                <p>A language for defining cellular automata.</p>
+                                <h4>Features</h4>
+                                <ul class="uk-list uk-list-square">
+                                    <li>Create cellular simulations such as Conway's Game of Life.</li>
+                                    <li>Simple syntax.</li>
+                                    <li>Lightweight interpreter written in Rust.</li>
+                                    <li>Renderer agnostic - Simple defulat renderer included.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="uk-section uk-section-muted uk-container">
-            <h3 class="uk-card-title uk-light">Example</h3>
-            <div class="uk-card uk-card-default uk-card-body uk-light uk-background-secondary">
-                <p>Conway's Game of Life</p>
-                <div id="source" class="uk-container">
-                <pre><span class="src1">states</span> 3<span class="src2">        # 3 State System
-                # 1 = Live cell
-                # 2 = Dead cell</span>
-                
-1 <span class="src3">=2.1</span> 1 _ 1    <span class="src2"># Any live cell with two or three live neighbours lives on to the next generation.</span>
-1 <span class="src3">=3.1</span> 1 _ 1
-1 <span class="src4">^4.1</span> 2 _ 2    <span class="src2"># Overpopulation</span>
-1 <span class="src4">^7.2</span> 2 _ 2    <span class="src2"># Any live cell with fewer than two live neighbours dies, as if by underpopulation.</span>
-2 <span class="src3">=3.1</span> 1 _ 1    <span class="src2"># Any dead cell with 3 neighbors comes to life</span></pre>    
-                </div>
-                <p class="uk-text-bold">What is going on here?</p>
-                <ul class="uk-list uk-list-hyphen">
-                    <li>CellM syntax is based off the quintuples that can be used to define turing machines.</li>
-                </ul>
-                <p>Here is the basic grammar for defining a rule:</p>
-                <code>&#x3C;rule&#x3E; = &#x3C;current state&#x3E; (&#x3C;neighbors&#x3E;.&#x3C;neighbor state&#x3E;) &#x3C;offspring&#x3E; &#x3C;move&#x3E; &#x3C;next state&#x3E;</code>
-                <p class="uk-text-bold">Why three states?</p>
-                <ul class="uk-list uk-list-hyphen">
-                    <li>Every CellM system must include the zero state (dead state). No rules can be written for this state. Therefore we define two new states to represent our live and dead cells.</li>
-                </ul>
-                
-            </div>
-            <p class="uk-text-muted uk-text-center">CellM and Website was created by Matthew Kleitz, 2022</p>
+                <div class="uk-section uk-section-muted uk-container">
+                    <h3 class="uk-card-title uk-light">Example</h3>
+                    <div class="uk-card uk-card-default uk-card-body uk-light uk-background-secondary">
+                        <p>Conway's Game of Life</p>
+                        <div id="source" class="uk-container">
+                        <pre><span class="src1">states</span> 3<span class="src2">        # 3 State System
+                        # 1 = Live cell
+                        # 2 = Dead cell</span>
+                        
+        1 <span class="src3">=2.1</span> 1 _ 1    <span class="src2"># Any live cell with two or three live neighbours lives on to the next generation.</span>
+        1 <span class="src3">=3.1</span> 1 _ 1
+        1 <span class="src4">^4.1</span> 2 _ 2    <span class="src2"># Overpopulation</span>
+        1 <span class="src4">^7.2</span> 2 _ 2    <span class="src2"># Any live cell with fewer than two live neighbours dies, as if by underpopulation.</span>
+        2 <span class="src3">=3.1</span> 1 _ 1    <span class="src2"># Any dead cell with 3 neighbors comes to life</span></pre>    
+                        </div>
+                        <p class="uk-text-bold">What is going on here?</p>
+                        <ul class="uk-list uk-list-hyphen">
+                            <li>CellM syntax is based off the quintuples that can be used to define turing machines.</li>
+                        </ul>
+                        <p>Here is the basic grammar for defining a rule:</p>
+                        <code>&#x3C;rule&#x3E; = &#x3C;current state&#x3E; (&#x3C;neighbors&#x3E;.&#x3C;neighbor state&#x3E;) &#x3C;offspring&#x3E; &#x3C;move&#x3E; &#x3C;next state&#x3E;</code>
+                        <p class="uk-text-bold">Why three states?</p>
+                        <ul class="uk-list uk-list-hyphen">
+                            <li>Every CellM system must include the zero state (dead state). No rules can be written for this state. Therefore we define two new states to represent our live and dead cells.</li>
+                        </ul>
+                        
+                    </div>
+                    <p class="uk-text-muted uk-text-center">CellM and Website was created by Matthew Kleitz, 2022</p>
+                </div></li>
+
+                <li><div>
+                    <div class="uk-section uk-section-muted uk-container uk-child-width-1-2" uk-grid>
+                        
+                        <div class="uk-width-1-4@s uk-width-2-5@m">
+                            <ul class="uk-nav uk-nav-default">
+                                <li class="uk-active"><a href="#">Simulator Overview</a></li>
+                                <li class="uk-parent">
+                                    <a href="#">CellM</a>
+                                    <ul class="uk-nav-sub">
+                                        <li><a href="#">States</a></li>
+                                        <li>
+                                            <a href="#">Rules</a>
+                                            <ul>
+                                                <li><a href="#">Neighbor Selection</a></li>
+                                                <li><a href="#">Movement</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="uk-card-title uk-light uk-width-1-2@s">Simulator Overview</h3>
+                            <p>
+                                CellM automata are simulated on a 2D square grid. Each square on the grid represents a single cell is assigned a state value. 
+                                The possible states are { 0..n | n >= 2 }. State 0 is reserved as a 'dead' state for the system. This cell generally represents
+                                blank space and cannot perform actions on itself.<br/><br/>
+                                When designing a system, you should select your states in sequential order. If you want two active states in your system, represent these
+                                with states 1 and 2. Unnecessary memory will be allocated if larger state numbers are used when not needed.<br/><br/>
+                                Simulation is determined by defined rules. Rules are defined in a similar way to turing machine insuctions.
+                            </p>
+                        </div>
+                        
+                    </div>
+                </div></li>
+            </ul>
         </div>
         
     </body>
