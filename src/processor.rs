@@ -1,6 +1,6 @@
 use rand::{prelude::ThreadRng, Rng};
 
-use crate::bio::{BioRule, RuleSet};
+use crate::{bio::{BioRule, RuleSet}, config::RenderRules};
 use std::collections::HashMap;
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
@@ -47,15 +47,15 @@ const NEIGHBOR_POS:[V; 8] = [V { x:1, y:0 }, V { x:1, y:1 }, V { x:0, y:1 }, V {
 pub struct Processor {
     pub rule_set:RuleSet,
     grid:Vec<Vec<i32>>,
-    grid_width:usize,
-    grid_height:usize,
+    pub render_rules:RenderRules,
     pub cell_map:HashMap<Point, i32>,     // Keeps track of where active cells are. Does not keep track of state 0, aka dead state.
     rand:ThreadRng
 }
 
 impl Processor {
-    pub fn new(rules:RuleSet, width:usize, height:usize) -> Processor {
-        Processor { rule_set:rules, grid:vec![vec![0; width]; height], grid_width:width, grid_height:height, cell_map:HashMap::new(), rand:rand::thread_rng() }
+    pub fn new(rules:RuleSet, render_rules:RenderRules) -> Processor {
+        let ngrid = vec![vec![0; render_rules.grid_width]; render_rules.grid_height];
+        Processor { rule_set:rules, grid:ngrid, render_rules:render_rules, cell_map:HashMap::new(), rand:rand::thread_rng() }
     }
 
     pub fn set_cell(&mut self, val:i32, x:usize, y:usize) {
@@ -152,7 +152,7 @@ impl Processor {
         let ny = NEIGHBOR_POS[neighbor_n].y + cell.y as i32;
 
         // If the neighbor is off the board, return none
-        if nx < 0 || ny < 0 || nx >= self.grid_width as i32 || ny >= self.grid_height as i32 {
+        if nx < 0 || ny < 0 || nx >= self.render_rules.grid_width as i32 || ny >= self.render_rules.grid_height as i32 {
             None
         }
         // If it's a valid neighbor, return something

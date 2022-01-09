@@ -46,8 +46,10 @@ async fn main() {
     let rule_set = RuleSet::new(parser.rules, parser.n_states as usize);
     rule_set.print();
 
+    red_ln!("W: {}, H: {}", parser.render_rules.grid_width, parser.render_rules.grid_height);
+
     //rule_set.print();
-    let mut processor = Processor::new(rule_set, size, size);
+    let mut processor = Processor::new(rule_set, parser.render_rules);
     for y in 0..size {
         for x in 0..size {
             processor.set_cell(2, x, y);
@@ -67,6 +69,7 @@ async fn main() {
     
     let mut timer:f32 = 0.0;
 
+    let S:f32 = processor.render_rules.cell_size as f32;
     loop {
         clear_background(BLUE);
 
@@ -74,26 +77,30 @@ async fn main() {
         for p in &processor.cell_map {
             let state = p.1.to_owned();
             let pos = p.0.to_owned();
-            let mut color = GRAY;
-            if state == 1 {
+            // Color stuff
+            let color_data = processor.render_rules.get_color(state);
+            let color_bytes = color_data.to_be_bytes();
+            //red_ln!("Color: {}, {}, {}, {}", color_bytes[0], color_bytes[1], color_bytes[2], color_bytes[3]);
+            let color = Color::from_rgba(color_bytes[0], color_bytes[1], color_bytes[2], color_bytes[3]);
+            /*if state == 1 {
                 color = YELLOW;
-            }
+            }*/
             
 
-            draw_rectangle(pos.x as f32 * 20.0, pos.y as f32 * 20.0, 20.0, 20.0, color);
+            draw_rectangle(pos.x as f32 * S, pos.y as f32 * S, S, S, color);
         }
 
-        for i in 0..size {
+        for i in 0..processor.render_rules.grid_width {
             let fi = i as f32;
-            draw_line(fi * 20.0, 0.0, fi * 20.0, 640.0, 1.0, BLACK);
+            draw_line(fi * S, 0.0, fi * S, 640.0, 1.0, BLACK);
         }
-        for i in 0..size {
+        for i in 0..processor.render_rules.grid_height {
             let fi = i as f32;
-            draw_line(0.0, fi * 20.0, 640.0, fi * 20.0, 1.0, BLACK);
+            draw_line(0.0, fi * S, 640.0, fi * S, 1.0, BLACK);
         }
 
         timer += get_frame_time();
-        if timer > 0.3 {
+        if timer > 0.1 {
             processor.step();
             timer = 0.0;
         }

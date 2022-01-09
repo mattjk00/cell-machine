@@ -13,7 +13,7 @@ impl StatePoint {
 }
 
 pub struct RenderRules {
-    colors:HashMap<i32, i32>,
+    colors:HashMap<i32, u32>,
     pub cell_size:usize,
     pub grid_width:usize,
     pub grid_height:usize,
@@ -25,11 +25,15 @@ impl RenderRules {
         RenderRules { colors:HashMap::new(), cell_size:0, grid_width:0, grid_height:0, seed:vec![] }
     }
 
-    pub fn get_colors(&self) -> &HashMap<i32, i32> {
+    pub fn get_colors(&self) -> &HashMap<i32, u32> {
         &self.colors
     }
 
-    pub fn set_color(&mut self, state:i32, color:i32) {
+    pub fn get_color(&self, state:i32) -> u32 {
+        self.colors[&state]
+    }
+
+    pub fn set_color(&mut self, state:i32, color:u32) {
         self.colors.insert(state, color);
     }
 

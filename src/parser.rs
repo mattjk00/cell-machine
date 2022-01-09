@@ -1,4 +1,4 @@
-use crate::{tokenizer::{Token, TokenType, print_tokens}, bio::{BioRule, BioMove}};
+use crate::{tokenizer::{Token, TokenType, print_tokens}, bio::{BioRule, BioMove}, config::RenderRules};
 /*
 Grammar
 -------
@@ -25,6 +25,7 @@ N used to denote any number, can be nullable
 pub struct Parser {
     pub input: Vec<Token>,
     pub rules: Vec<BioRule>,
+    pub render_rules: RenderRules,
     cur_rule:BioRule,
     cur_token:Token,
     cur_index:usize,
@@ -35,7 +36,7 @@ impl Parser {
     /// Create a new parser with given token input.
     pub fn new(inp:Vec<Token>) -> Parser {
         let curt:Token = inp[0].clone();
-        Parser { input:inp, rules:vec![], cur_rule:BioRule::new_blank(), cur_index:0, cur_token:curt, n_states:0 }
+        Parser { input:inp, rules:vec![], cur_rule:BioRule::new_blank(), cur_index:0, cur_token:curt, n_states:0, render_rules:RenderRules::new_blank() }
     }
 
     /// Resets parser helper fields to initial state and begins parse.
@@ -53,6 +54,11 @@ impl Parser {
         print_tokens(&self.input);
 
         self.sys();
+        if self.cur_token.ttype != TokenType::EOF && self.cur_token.lexeme == "render" {
+            self.advance();
+            self.parse_render_section();
+        }
+        
 
         println!("Finished Parse!\nSystem with {} states.", self.n_states);
     }
@@ -96,13 +102,8 @@ impl Parser {
             // Reset the rule for the next parser pass
             self.cur_rule = BioRule::new_blank();
 
-            // If end of file reached, advance on and end. Otherwise, expect a newline char.
-            if self.cur_token.ttype == TokenType::EOF {
-                self.advance();
-            }
-            else {
-                self.consume(TokenType::Newline);
-            }
+            self.advance();
+            
         }
     }
 
@@ -181,6 +182,71 @@ impl Parser {
         }
         else {
             self.error(String::from("Invalid MOVE syntax."));
+        }
+    }
+
+    fn parse_sizes(&mut self) {
+        for i in 0..3 {
+            let size_result = usize::from_str_radix(&self.cur_token.lexeme, 10);
+            let mut size = 0;
+            match size_result {
+                Ok(s) => size = s,
+                Err(e) => self.error("Invalid size parameter for render section!".to_string())
+            };
+            red!("PARSING SIZE {}", size);
+
+            match i {
+                0 => self.render_rules.cell_size = size,
+                1 => self.render_rules.grid_width = size,
+                2 => self.render_rules.grid_height = size,
+                _ => ()
+            };
+            self.advance();
+        }
+        self.consume(TokenType::Newline);
+    }
+
+    fn parse_render_section(&mut self) {
+
+        self.parse_sizes();
+
+        while self.cur_token.ttype == TokenType::Number || self.cur_token.ttype == TokenType::Newline {
+
+            while self.cur_token.ttype == TokenType::Newline {
+                self.advance();
+            }
+            if self.cur_token.ttype == TokenType::EOF {
+                self.advance();
+                break;
+            }
+
+            // Attempt to parse the state
+            let state_result = i32::from_str_radix(&self.cur_token.lexeme, 10);
+            let mut state = 0;
+            match state_result {
+                Ok(s) => state = s,
+                Err(e) => self.error("Invalid state definition in render section!".to_string())
+            };
+            self.advance();
+
+            // Attempt to parse the color for the state
+            let color_result = u32::from_str_radix(&self.cur_token.lexeme, 16);
+            let mut color:u32 = 0;
+
+            match color_result {
+                Ok(c) => color = c,
+                Err(e) => self.error(format!("Invalid 32 bit color assignment for state {}", state))
+            };
+            self.advance();
+            self.render_rules.set_color(state, color);
+            
+            // If end of file reached, advance on and end. Otherwise, expect a newline char.
+            /*if self.cur_token.ttype == TokenType::EOF {
+                self.advance();
+            }
+            else {
+                self.consume(TokenType::Newline);
+            }*/
         }
     }
 

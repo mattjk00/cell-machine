@@ -124,7 +124,6 @@ impl Tokenizer {
             '&' => self.add_token(TokenType::Link, String::from("&")),
             '@' => self.add_token(TokenType::Absorb, String::from("@")),
             'l' => self.add_token(TokenType::Direction, String::from("l")),
-            'r' => self.add_token(TokenType::Direction, String::from("r")),
             'u' => self.add_token(TokenType::Direction, String::from("u")),
             'd' => self.add_token(TokenType::Direction, String::from("d")),
             ' ' => self.add_token(TokenType::Space, String::from("~")),
@@ -139,13 +138,25 @@ impl Tokenizer {
                 self.parse_comment();
             },
             's' => {
-                let result = self.parse_kw_states();
+                let result = self.parse_keyword(String::from("states"));
                 if !result {
                     return Err(io::Error::new(io::ErrorKind::InvalidInput, format!("Unexpected Symbol {} when trying to parse 'states' label on line {}. Aborting Parse.", self.cur_char, self.cur_line)));
                 }
             },
+            'r' => {
+                let peek = self.peek_next().expect("Unexpected end of file after 'r'");
+                if peek == 'e' {
+                    let result = self.parse_keyword(String::from("render"));
+                    if !result {
+                        return Err(io::Error::new(io::ErrorKind::InvalidInput, format!("Unexpected Symbol {} when trying to parse 'render' label on line {}. Aborting Parse.", self.cur_char, self.cur_line)));
+                    }
+                }
+                else {
+                    self.add_token(TokenType::Direction, String::from("r"));
+                }
+            },
             _ => {
-                if self.cur_char.is_digit(10) {
+                if self.cur_char.is_digit(16) {
                     self.word_stack.push(self.cur_char);
                     self.parse_number();
                 }
@@ -161,28 +172,13 @@ impl Tokenizer {
         Ok(())
     }
 
-    /*fn parse_whitespace(&mut self) {
-        let mut peek = self.peek_next();
-        let mut is_ws = false;
-        while is_ws {
-            match peek {
-                Some(c) => is_ws = c.is_whitespace(),
-                None => is_ws = false
-            };
-            if is_ws {
-                self.advance();
-                peek = self.peek_next();
-            }
-        }
-    }*/
-
     /// Parses a number token.
     /// This function assumes that the first digit of the number was placed in self.word_stack already.
     fn parse_number(&mut self) {
         let peek = self.peek_next();
         let mut is_dig = false;
         match peek {
-            Some(c) => is_dig = c.is_digit(10),
+            Some(c) => is_dig = c.is_digit(16),
             None => ()
         };
         if is_dig {
@@ -200,6 +196,7 @@ impl Tokenizer {
 
     /// Attempts to tokenize the 'states' keyword.
     /// Will return a bool value indicating the success of tokenizing.
+    #[deprecated]
     fn parse_kw_states(&mut self) -> bool {
         let key:Vec<char> = vec!['s', 't', 'a', 't', 'e', 's'];
         for i in 0..key.len() {
@@ -211,6 +208,21 @@ impl Tokenizer {
             }
         }
         self.add_token(TokenType::Label, String::from("states"));
+        true
+    }
+
+    fn parse_keyword(&mut self, kw:String) -> bool {
+        let key:Vec<char> = kw.chars().collect();
+
+        for i in 0..key.len() {
+            if key[i] != self.cur_char {
+                return false; // failed to parse whole word
+            }
+            if i != key.len() - 1 {
+                self.advance();
+            }
+        }
+        self.add_token(TokenType::Label, kw);
         true
     }
 
