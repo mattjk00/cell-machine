@@ -22,7 +22,7 @@ pub struct RenderRules {
 
 impl RenderRules {
     pub fn new_blank() -> RenderRules {
-        RenderRules { colors:HashMap::new(), cell_size:0, grid_width:0, grid_height:0, seed:vec![] }
+        RenderRules { colors:HashMap::new(), cell_size:10, grid_width:10, grid_height:10, seed:vec![] }
     }
 
     pub fn get_colors(&self) -> &HashMap<i32, u32> {

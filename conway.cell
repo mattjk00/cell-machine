@@ -14,7 +14,3 @@ render 15 50 50     # cell size, grid width, grid height
 0 000000FF
 1 FF00FFAA
 2 00000000
-
-# # Ideas for language
-# If in state 1 and 2 neighbors are in state 2 then
-#   leave 1, move anywhere, go to state 2

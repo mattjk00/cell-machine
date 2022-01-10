@@ -20,6 +20,7 @@
             <ul uk-tab>
                 <li><a href="#">Home</a></li>
                 <li><a href="#">Getting Started</a></li>
+                <li><a href="#">Reference</a></li>
             </ul>
 
             <ul class="uk-switcher uk-margin">
@@ -76,9 +77,9 @@
                 </div></li>
 
                 <li><div>
-                    <div class="uk-section uk-section-muted uk-container uk-child-width-1-2" uk-grid>
+                    <div class="uk-section uk-section-muted uk-container">
                         
-                        <div class="uk-width-1-4@s uk-width-2-5@m">
+                        <!-- <div class="uk-width-1-4@s uk-width-2-5@m">
                             <ul class="uk-nav uk-nav-default">
                                 <li class="uk-active"><a href="#">Simulator Overview</a></li>
                                 <li class="uk-parent">
@@ -94,7 +95,7 @@
                                     </ul>
                                 </li>
                             </ul>
-                        </div>
+                        </div> -->
                         <div>
                             <h3 class="uk-text-warning">Simulator Overview</h3>
                             <p>
@@ -136,11 +137,23 @@
                                 The first line of every .cal file should declare how many states there are in the system.
                                 After declaring how the state count, write out your rules line by line. And that's all you need!
                                 Comments can be written using the # symbol. Here is an example of a very simple automata:<br/>
-                                <pre>
+                                <pre class="uk-width-1-2">
 <span class="src1">states</span> 2
 1 0.0 1 r 1     <span class="src2"># As long as the right neighbor is in state 0,
                 # move right and leave behind a cell in state 1.</span></pre><br/>
-                                If you placed one cell in state 1 on an empty grid, then that cell would keep moving right indefinitely, leaving a trail.
+                                If you placed one cell in state 1 on an empty grid, then that cell would keep moving right indefinitely, leaving a trail.<br/><br/>
+                                After declaring all your rules, you may add custom rendering instructions. At the moment, rendering instructions are used just for
+                                declaring the size of each cell on the screen (in pixels), as well as the width and height of the grid. This section will be started 
+                                with a line of code like this <code>render <i>cell_size grid_width grid_height</i></code> where the parameters in italic will be written
+                                as constant numbers. The following lines will state what color each cell should be. The format for these lines will be 
+                                <code><i>state 32_bit_hex_color</i></code> Let's extend the simple automata example from above with some rendering rules.<br/>
+                                <pre class="uk-width-1-2">
+<span class="src1">states</span> 2
+1 0.0 1 r 1     <span class="src2"># As long as the right neighbor is in state 0,
+                # move right and leave behind a cell in state 1.</span>
+<span class="src1">render</span> 10 32 32 <span class="src2"># Render a 32x32 grid where cells are 10x10 in size</span>
+1 FF0000EE      <span class="src2"># Cells in state 1 will be a slightly transparent red</span>
+0 00FF00FF      <span class="src2"># Cells in state 0 will be solid green</span></pre><br/>
                             </p>
                         </div>
                         
