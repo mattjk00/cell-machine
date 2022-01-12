@@ -63,6 +63,18 @@ impl Processor {
         self.cell_map.insert(Point::new(x, y), val);
     }
 
+    /// Generates a random starting generation for simulation.
+    pub fn gen_random_seed(&mut self) {
+        let count = (self.render_rules.grid_width * self.render_rules.grid_height) / 4;
+
+        for _i in 0..count {
+            let state = self.rand.gen_range(1..self.rule_set.nstates);
+            let x = self.rand.gen_range(0..self.render_rules.grid_width);
+            let y = self.rand.gen_range(0..self.render_rules.grid_height);
+            self.set_cell(state as i32, x, y);
+        }
+    }
+
     pub fn step(&mut self) {
         let exec_rules = self.get_exec_rules();
         //println!("Executing {} rules", exec_rules.len());
@@ -205,4 +217,45 @@ impl Processor {
         }
     }
 
+}
+
+//#[cfg(tests)]
+mod tests {
+    use crate::{processor::Point, bio::RuleSet, config::RenderRules};
+    use super::Processor;
+
+    fn blank_processor() -> Processor {
+        Processor::new(
+            RuleSet::new(vec![], 1),
+            RenderRules::new_blank()
+        )
+    }
+
+    #[test]
+    fn get_neighbor_state_works() {
+        let mut processor = blank_processor();
+        processor.set_cell(1, 5, 5); // main cell
+        processor.set_cell(2, 5, 6); // Top Neighbor
+        processor.set_cell(3, 4, 6); // Upper Left
+        let point = Point::new(5, 5);
+
+        assert_eq!(processor.get_neighbor_state(point.clone(), 2).unwrap(), 2); // Top Neighbor
+        assert_eq!(processor.get_neighbor_state(point.clone(), 3).unwrap(), 3); // Upper Left
+        assert_eq!(processor.get_neighbor_state(point.clone(), 7).unwrap(), 0); // Bottom Right
+    }
+
+    #[test]
+    fn count_valid_neighbors() {
+        let processor = blank_processor();
+        // Getting neighbors for cell against the wall. there should be 5 valid neighbors.
+        let neighbors = processor.get_all_neighbors(Point::new(0, 2));
+        let mut count = 0;
+        for n in neighbors.iter() {
+            match n {
+                Some(_s) => count += 1,
+                None => ()
+            };
+        }
+        assert_eq!(count, 5);
+    }
 }

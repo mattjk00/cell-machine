@@ -30,7 +30,7 @@ impl fmt::Display for TokenType {
        write!(f, "{:?}", self)
     }
 }
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct Token {
     pub ttype:TokenType,
     pub lexeme:String,
@@ -252,5 +252,22 @@ pub fn print_tokens(tokens:&Vec<Token>) {
             TokenType::Newline => println!(),
             _ => ()
         };
+    }
+}
+
+mod tests {
+    use super::{Tokenizer, Token, TokenType};
+
+    #[test]
+    fn simple_tokenize() {
+        let mut t = Tokenizer::new("states 2\n".to_string());
+        let tokens = vec![
+            Token::new(TokenType::Label, "states".to_string(), 1), 
+            Token::new(TokenType::Space, "~".to_string(), 1), 
+            Token::new(TokenType::Number, "2".to_string(), 1),
+            Token::new(TokenType::Newline, "\\n".to_string(), 1)];
+        t.parse().unwrap();
+
+        assert_eq!(t.tokens, tokens);
     }
 }

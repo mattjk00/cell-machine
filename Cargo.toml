@@ -1,5 +1,5 @@
 [package]
-name = "cell-machine"
+name = "cellm"
 version = "0.1.0"
 authors = ["Matthew K"]
 edition = "2018"

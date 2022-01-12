@@ -1,3 +1,5 @@
+use colour::red;
+
 use crate::{tokenizer::{Token, TokenType, print_tokens}, bio::{BioRule, BioMove}, config::RenderRules};
 /*
 Grammar

@@ -2,6 +2,8 @@
 use std::collections::hash_map::DefaultHasher;
 use std::hash::Hasher;
 
+use colour::green;
+
 /// A helper struct for defining how a cell should move
 /// If the is_random flag is set to true, then the cell will move to a random empty space.
 /// The constant char will be one of l, r, u, d. In the future, diagonal should be added.
@@ -59,7 +61,7 @@ impl BioRule {
             print!("Any {}", self.any_neighbor_count);
         }
         print!("\n\t");
-        println!("NState: {}\tMove:{}\tOffspring:{}\tNext:{}\tAnyNeigh:{}", self.neighbors_state, self.move_to.constant, self.offspring, self.next_state, self.any_neighbor);        
+        println!("NState: {}\tMove:{}\tOffspring:{}\tNext:{}\tAnyNeigh:{}\tExact:{}", self.neighbors_state, self.move_to.constant, self.offspring, self.next_state, self.any_neighbor, self.any_neighbor_exact);        
     }
 
     /// Used for assigning a unique id to a rule for debugging purposes.
@@ -80,7 +82,7 @@ impl BioRule {
 #[derive(Clone)]
 pub struct RuleSet {
     rules:Vec<Vec<BioRule>>,
-    nstates:usize
+    pub nstates:usize
 }
 
 impl RuleSet {

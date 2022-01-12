@@ -1,16 +1,17 @@
 states 3
 # 1 = Live cell
 # 2 = Dead cell
-                
+
+1 =1.1 2 _ 2    # Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+1 =0.1 2 _ 2          
+
 1 =2.1 1 _ 1    # Any live cell with two or three live neighbours lives on to the next generation.
 1 =3.1 1 _ 1
 1 ^4.1 2 _ 2    # Overpopulation
 
-1 ^7.2 2 _ 2    # Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+2 =3.1 1 _ 1    # Birth
 
-2 =3.1 1 _ 1
-
-render 15 50 50     # cell size, grid width, grid height
+render 10 100 100     # cell size, grid width, grid height
 0 000000FF
 1 FF00FFAA
 2 00000000
