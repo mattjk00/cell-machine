@@ -1,0 +1,1 @@
+cp ../target/debug/cellm.exe cellm.exe; cp -r ../examples ./; start .

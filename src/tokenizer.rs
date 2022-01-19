@@ -64,7 +64,7 @@ impl Tokenizer {
 
     pub fn new_from_file(path:String) -> Tokenizer {
         let data = fs::read_to_string(path).expect("Failed to open source file!");
-        println!("File: {}", data);
+        //println!("File: {}", data);
         Tokenizer::new(data)
     }
 
@@ -243,10 +243,14 @@ impl Tokenizer {
 
 pub fn print_tokens(tokens:&Vec<Token>) {
     //println!("Input:\n----------\n{}\n\n\n~~TOKENS~~\n", self.input);
-    println!("Type\t\tLexeme\t\tLine #\t\tIndex\n-----------------------------------------------------");
+    println!("{}\t\t{}\t\t\t{}\t\t{}\n{:->64}", "Type", "Lexeme", "Line #", "Index", "");
     let mut index = 0;
     for t in tokens.iter() {
-        println!("{:4}\t\t{:4}\t\t{:4}\t\t{:4}", t.ttype, t.lexeme, t.line, index);
+        let mut lex = t.lexeme.clone();
+        if lex.len() > 4 {
+            lex = format!("{}...", &t.lexeme[..4]);
+        }
+        println!("{}\t\t{}\t\t{}\t\t{}", t.ttype, lex, t.line, index);
         index += 1;
         match t.ttype {
             TokenType::Newline => println!(),

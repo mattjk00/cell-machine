@@ -1,4 +1,5 @@
 use macroquad::prelude::*;
+
 use crate::processor::Processor;
 
 
@@ -31,13 +32,15 @@ impl SimpleRenderer {
             draw_rectangle(pos.x as f32 * S, pos.y as f32 * S, S, S, color);
         }
 
-        for i in 0..processor.render_rules.grid_width {
+        let wn = processor.render_rules.grid_width+1;
+        for i in 0..wn {
             let fi = i as f32;
-            draw_line(fi * S, 0.0, fi * S, 640.0, 1.0, BLACK);
+            draw_line(fi * S, 0.0, fi * S, wn as f32 * S, 1.0, BLACK);
         }
-        for i in 0..processor.render_rules.grid_height {
+        let wh = processor.render_rules.grid_height+1;
+        for i in 0..wh {
             let fi = i as f32;
-            draw_line(0.0, fi * S, 640.0, fi * S, 1.0, BLACK);
+            draw_line(0.0, fi * S, wh as f32 * S, fi * S, 1.0, BLACK);
         }
 
         self.timer += get_frame_time();

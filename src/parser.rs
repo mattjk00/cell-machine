@@ -53,16 +53,13 @@ impl Parser {
             _ => true
         });
 
-        print_tokens(&self.input);
+        //print_tokens(&self.input);
 
         self.sys();
         if self.cur_token.ttype != TokenType::EOF && self.cur_token.lexeme == "render" {
             self.advance();
             self.parse_render_section();
         }
-        
-
-        println!("Finished Parse!\nSystem with {} states.", self.n_states);
     }
 
     // ---- Parsing Functions ---- //
@@ -195,7 +192,7 @@ impl Parser {
                 Ok(s) => size = s,
                 Err(e) => self.error("Invalid size parameter for render section!".to_string())
             };
-            red!("PARSING SIZE {}", size);
+            //red!("PARSING SIZE {}", size);
 
             match i {
                 0 => self.render_rules.cell_size = size,
@@ -272,7 +269,7 @@ impl Parser {
         }
         if self.cur_token.ttype == tok {
                 let lex_copy = self.cur_token.lexeme.clone();
-                println!("Consuming {} -> {}", lex_copy, tok);
+                //println!("Consuming {} -> {}", lex_copy, tok);
                 self.advance();
                 return lex_copy;
         }
