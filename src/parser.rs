@@ -65,6 +65,10 @@ impl Parser {
     // ---- Parsing Functions ---- //
 
     fn sys(&mut self) {
+        // Ignore leading newline tokens
+        while self.cur_token.ttype == TokenType::Newline {
+            self.advance();
+        }
         // Begin looking for the 'states' keyword
         if self.cur_token.lexeme == "states" {
             self.advance();

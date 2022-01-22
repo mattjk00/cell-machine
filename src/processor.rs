@@ -64,14 +64,22 @@ impl Processor {
     }
 
     /// Generates a random starting generation for simulation.
-    pub fn gen_random_seed(&mut self) {
+    pub fn gen_random_seed(&mut self, states:Vec<i32>) {
         let count = (self.render_rules.grid_width * self.render_rules.grid_height) / 4;
 
         for _i in 0..count {
-            let state = self.rand.gen_range(1..self.rule_set.nstates);
+            let mut state:i32 = 0;
             let x = self.rand.gen_range(0..self.render_rules.grid_width);
             let y = self.rand.gen_range(0..self.render_rules.grid_height);
-            self.set_cell(state as i32, x, y);
+            
+            // Generate any state if none were specified for random generation.
+            if states.len() == 0 {
+                state = self.rand.gen_range(1..self.rule_set.nstates) as i32;
+            } else {
+                // Pick a random state from the specified list
+                state = states[self.rand.gen_range(0..states.len())];
+            }
+            self.set_cell(state, x, y);
         }
     }
 

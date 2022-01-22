@@ -1,3 +1,7 @@
+# Conway's Game of Life implementation in CellM language. 
+# How to run:
+#           cellm.exe examples/conway.cell -fill 2 -gen 1 -verbose
+
 states 3
 # 1 = Live cell
 # 2 = Dead cell

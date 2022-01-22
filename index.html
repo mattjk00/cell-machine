@@ -79,7 +79,6 @@
 
                 <li><div>
                     <div class="uk-section uk-section-muted uk-container">
-                        
                         <!-- <div class="uk-width-1-4@s uk-width-2-5@m">
                             <ul class="uk-nav uk-nav-default">
                                 <li class="uk-active"><a href="#">Simulator Overview</a></li>
@@ -158,6 +157,73 @@
                             </p>
                         </div>
                         
+                        
+                    </div>
+                </div></li>
+                <li><div>
+                    <div class="uk-section uk-section-muted uk-container">
+                        <h3>Syntax Reference</h3>
+                        <table class="uk-table uk-table-divider uk-dark tbl">
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Name</th>
+                                    <th>Usage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>_</td>
+                                    <td>Null or None</td>
+                                    <td>Denotes a value of nothing. For example, use _ as the move in a rule to prevent movement.</td>
+                                </tr>
+                                <tr>
+                                    <td>^</td>
+                                    <td>Any</td>
+                                    <td>Denotes any value. Can be used to denote 'any neighbor' or 'move any direction'.</td>
+                                </tr>
+                                <tr>
+                                    <td>=<i>n</i></td>
+                                    <td>Any n</td>
+                                    <td>Used for neighbor specification. Used to specify if <i>exactly</i> any n neighbors are in this state. </td>
+                                </tr>
+                                <tr>
+                                    <td>*</td>
+                                    <td>All</td>
+                                    <td>Denotes all values. Can be used to denote 'all neighbors'.</td>
+                                </tr>
+                                <tr>
+                                    <td>.</td>
+                                    <td>In State</td>
+                                    <td>Used for neighbor specification. It is the dividing token between the specified neighbors and their specified state.</td>
+                                </tr>
+                                <tr>
+                                    <td>r</td>
+                                    <td>Right</td>
+                                    <td>For moving to the right.</td>
+                                </tr>
+                                <tr>
+                                    <td>l</td>
+                                    <td>Left</td>
+                                    <td>For moving to the left.</td>
+                                </tr>
+                                <tr>
+                                    <td>u</td>
+                                    <td>Up</td>
+                                    <td>For moving up.</td>
+                                </tr>
+                                <tr>
+                                    <td>d</td>
+                                    <td>Down</td>
+                                    <td>For moving down.</td>
+                                </tr>
+                                <tr>
+                                    <td>#</td>
+                                    <td>Line Comment</td>
+                                    <td>Begins a line comment.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div></li>
             </ul>
@@ -185,6 +251,16 @@
         }
         .big {
             color:#99c7ff;
+        }
+        .tbl {
+            background-color: #d4e7ff;
+            color:rgb(39, 39, 39);
+        }
+        tr:hover {
+            background-color: #ffebd4;
+        }
+        th {
+            background-color: #2b5a94;
         }
         body {
             background: rgb(134,16,147);

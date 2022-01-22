@@ -231,7 +231,7 @@ impl Tokenizer {
         let peek = self.peek_next();
         match peek {
             Some(c) => {
-                if c != '\n' {
+                if c != '\n' && c != '\0' && c != '\r' {
                     self.advance();
                     self.parse_comment();
                 }
